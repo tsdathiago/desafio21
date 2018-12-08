@@ -2,11 +2,12 @@ let registryOfficesTable = null;
 
 function updateTable(){
     if(registryOfficesTable == null){
-        registryOfficesTable = $('#dataTable').DataTable({
+        registryOfficesTable = $('#data-table').DataTable({
             "ajax": {
                 "url": "/get_registry_offices",
                 "type": "POST"
             },
+            "lengthMenu": [[10,25, 50, 100], ["10","25","50","100"]],
             "language": {
                 "sEmptyTable": "Nenhum registro encontrado",
                 "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
@@ -42,7 +43,7 @@ function updateTable(){
                                 return data;
                             }
                         }
-                        return data.substr( 0, 30 ) +'…';
+                        return data.substr( 0, 60 ) +'…';
                     }
                     else{
                         return data;

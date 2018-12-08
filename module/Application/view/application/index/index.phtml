@@ -1,18 +1,20 @@
 <?php
 echo $this->headTitle('P21 Sistemas');
 $this->inlineScript()->appendFile('/assets/js/registry.js', 'text/javascript');
+/** @var $form \Application\Form\ImportXmlForm */
+$form = $this->form;
 ?>
 
 <section class="jumbotron text-center">
 
     <div class="container buttons-top">
         <label class="btn btn-primary btn-file" id="import-file-label" for="file">
-            Importar <input type="file" id="file" name="file">
+            Importar XML <?= $this->formElement($form->get('file')); ?>
         </label>
     </div>
     <div class="container">
-        <div id="tableContainer">
-            <table id="dataTable" style="width: 100%;"
+        <div id="table-container">
+            <table id="data-table" style="width: 100%;"
                    class="table table-striped table-bordered dataTable no-footer cell-border nowrap responsive compact">
                 <thead>
                     <tr>
