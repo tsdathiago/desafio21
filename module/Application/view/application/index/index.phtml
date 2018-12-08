@@ -1,9 +1,15 @@
 <?php
 echo $this->headTitle('P21 Sistemas');
-$this->inlineScript()->appendFile('/assets/js/registry-0.0.0.js', 'text/javascript');
+$this->inlineScript()->appendFile('/assets/js/registry.js', 'text/javascript');
 ?>
 
 <section class="jumbotron text-center">
+
+    <div class="container buttons-top">
+        <label class="btn btn-primary btn-file" id="import-file-label" for="file">
+            Importar <input type="file" id="file" name="file">
+        </label>
+    </div>
     <div class="container">
         <div id="tableContainer">
             <table id="dataTable" style="width: 100%;"

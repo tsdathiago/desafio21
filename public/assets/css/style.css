@@ -9,6 +9,24 @@
     background-color: #fff;
 }
 
+.buttons-top{
+    margin-bottom: 20px;
+}
+
+#file{
+    display: none;
+}
+
+#import-container{
+    display: none;
+    margin-top: 10px;
+}
+
+.form-control-file, .form-control-range{
+    display: inline-block;
+    width: auto;
+}
+
 @media (min-width: 768px) {
     .jumbotron {
         padding-top: calc(var(--jumbotron-padding-y) * 2);

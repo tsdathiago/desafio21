@@ -2,6 +2,8 @@
 namespace Application\Controller;
 
 use Application\Entity\Registry;
+use Application\Form\ImportXmlForm;
+use Application\Service\XmlReader;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
 use Doctrine\ORM\EntityManager;
@@ -11,10 +13,52 @@ use Doctrine\ORM\EntityManager;
  * @package Application\Controller
  */
 class RegistryController extends AbstractActionController{
+
     /**
-     * @var $entityManager EntityManager
+     * Inicializa o banco de dados, convertendo os dados do Xml
+     * @return JsonModel
      */
-    private $entityManager;
+    public function importRegistryOfficesAction(){
+        $form = new ImportXmlForm();
+        $request = $this->getRequest();
+
+        if($request->isPost()){ // Verifica que o método é POST antes de executar as ações necessárias
+
+            // Obtém os dados do form
+            $data = array_merge_recursive(
+                $request->getPost()->toArray(),
+                $request->getFiles()->toArray()
+            );
+
+            $form->setData($data);
+
+            if($form->isValid()){ // Valida o form
+                $data = $form->getData();
+
+                /** @var $excelReader XmlReader */
+                $xmlReader = $this->getServiceLocator()->get(XmlReader::class);
+
+                $result = $xmlReader->readXml($data['file']['tmp_name']);
+
+                if($result === true){
+                    return new JsonModel([
+                        "result" => "success"
+                    ]);
+                }
+                else{
+                    return new JsonModel([
+                        "result" => "failure"
+                    ]);
+                }
+            }
+            else{
+                $this->getResponse()->setStatusCode(404);
+            }
+        }
+        else{ // Caso a requisição seja GET, envia o código HTTP 404
+            $this->getResponse()->setStatusCode(404);
+        }
+    }
 
     /**
      * Retorna ao usuário um Json contendo todos os cartórios registrados
@@ -22,7 +66,9 @@ class RegistryController extends AbstractActionController{
      */
     public function getAllRegistryOfficesAction()
     {
-        $this->entityManager = $this->getServiceLocator()->get(EntityManager::class);
+
+        /** @var $entityManager EntityManager */
+        $entityManager = $this->getServiceLocator()->get(EntityManager::class);
 
         // Garante que é uma requisição POST
         if($this->getRequest()->isPost()){
@@ -30,7 +76,7 @@ class RegistryController extends AbstractActionController{
              * Obtém a lista de todos os cartórios através do repositório
              * @var $registryOffices Registry[]
              */
-            $registryOffices = $this->entityManager->getRepository(Registry::class)->findAll();
+            $registryOffices = $entityManager->getRepository(Registry::class)->findAll();
 
             // Itera pela lista de cartórios para criar o Json
             $json = array(
@@ -44,6 +90,8 @@ class RegistryController extends AbstractActionController{
                     $registryOffice->getMail()
                 ];
             }
+            $json['result'] = "success";
+
 
             // Retorna o Json para o cliente
             return new JsonModel($json);

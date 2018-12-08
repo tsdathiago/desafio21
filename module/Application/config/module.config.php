@@ -16,10 +16,20 @@ return [
             'get_registry_offices'        => [
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => [
-                    'route' => '/get/registry_offices',
+                    'route' => '/get_registry_offices',
                     'defaults' => [
                         'controller' => 'Application\Controller\Registry',
                         'action'     => 'getAllRegistryOffices',
+                    ],
+                ]
+            ],
+            'import_registry_offices'        => [
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/import_registry_offices',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Registry',
+                        'action'     => 'importRegistryOffices',
                     ],
                 ]
             ],
@@ -56,9 +66,11 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            \Application\Service\XmlReader::class => \Application\Factory\XmlReaderFactory::class
         ],
         'aliases'   => [
             'translator' => 'MvcTranslator',
+            'XmlReader' => \Application\Service\XmlReader::class
         ],
     ],
     'translator'      => [
