@@ -5,6 +5,7 @@
     "doctrine/orm": "2.5.*",
     "doctrine/doctrine-module": "0.8.*",
     "doctrine/doctrine-orm-module": "0.8.*",
-    "beberlei/DoctrineExtensions": "~1.0"
+    "beberlei/DoctrineExtensions": "~1.0",
+    "phpoffice/phpspreadsheet": "^1.5"
   }
 }
