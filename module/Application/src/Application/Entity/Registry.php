@@ -21,7 +21,7 @@ class Registry{
     const DOCUMENT_TYPE_CNPJ = 2;
 
     /**
-     * @var $id int
+     * @var $id string
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(name="id")
@@ -47,7 +47,7 @@ class Registry{
     protected $document;
 
     /**
-     * @var $documentType int
+     * @var $documentType string
      * @ORM\Column(name="document_type")
      */
     protected $documentType;

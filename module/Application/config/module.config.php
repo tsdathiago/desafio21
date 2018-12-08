@@ -13,6 +13,16 @@ return [
                     ],
                 ],
             ],
+            'get_registry_offices'        => [
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/get/registry_offices',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Registry',
+                        'action'     => 'getAllRegistryOffices',
+                    ],
+                ]
+            ],
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
@@ -64,6 +74,7 @@ return [
     'controllers'     => [
         'invokables' => [
             'Application\Controller\Index' => \Application\Controller\IndexController::class,
+            'Application\Controller\Registry' => \Application\Controller\RegistryController::class,
         ],
     ],
     'view_helpers'    => [
