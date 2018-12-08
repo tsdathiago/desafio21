@@ -91,6 +91,18 @@ return [
         ],
     ],
     'doctrine'        => [
+        'driver' => [
+            "Application_driver" => [
+                'class' => Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
+                'cache' => 'array',
+                'paths' => [__DIR__."/../src/Application/Entity"]
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    'Application\Entity' => 'Application_driver'
+                ]
+            ]
+        ],
         'configuration' => [
             'orm_default' => [
                 'datetime_functions' => [
