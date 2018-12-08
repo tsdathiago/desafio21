@@ -1,6 +1,7 @@
 <?php
 namespace Application\Service;
 
+use Application\Entity\Registry;
 use Doctrine\ORM\EntityManager;
 use DOMDocument;
 use Zend\Config\Reader\Xml;
@@ -44,6 +45,58 @@ class XmlReader
         // Lê os dados do Xml
         $reader = new Xml();
         $data = $reader->fromString($contents);
+        $registryOffices = $data['cartorio'];
+        $repository = $this->entityManager->getRepository(Registry::class);
+
+        foreach($registryOffices as $registry){
+            // Obtém todos os dados
+            $name = $registry['nome'];
+            $right = $registry['razao'];
+            $documentType = $registry['tipo_documento'] == Registry::DOCUMENT_TYPE_CPF ?
+                Registry::DOCUMENT_TYPE_CPF : Registry::DOCUMENT_TYPE_CNPJ;
+            $document = $registry['documento'];
+            $zipcode = $registry['cep'];
+            $address = $registry['endereco'];
+            $district = $registry['bairro'];
+            $city = $registry['cidade'];
+            $state = $registry['uf'];
+            $active = $registry['ativo'] == "1" ? "1" : "0";
+            $notary = $registry['tabeliao'];
+            $phone = $registry['telefone'];
+            $email = $registry['email'];
+
+            // Tenta encontrar uma entidade existente, olhando o documento
+            $entity = $repository->findOneBy(array('document' => $document));
+            $foundEntity = true;
+            if($entity == null){
+                $entity = new Registry();
+                $foundEntity = false;
+            }
+
+            // Atualiza os dados da entidade
+            $entity->setName($name);
+            $entity->setRightName($right);
+            $entity->setDocument($document);
+            $entity->setDocumentType($documentType);
+            $entity->setZipcode($zipcode);
+            $entity->setAddress($address);
+            $entity->setCity($city);
+            $entity->setDistrict($district);
+            $entity->setState($state);
+            $entity->setNotary($notary);
+            $entity->setActive($active);
+            $entity->setPhone($phone);
+            $entity->setMail($mail);
+
+            if($foundEntity == false) $this->entityManager->persist($entity);
+        }
+        try{
+            $this->entityManager->flush();
+        }
+        catch(\Exception $exception){
+            echo $exception;
+            exit;
+        }
 
         return true;
     }
