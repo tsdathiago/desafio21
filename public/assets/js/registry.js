@@ -111,7 +111,9 @@ function saveCurrentRegistry(data){
         data: data,
         success: function(data){
             if(data['result'] === "success"){
-                updateTable();
+                currentRow.data(data['data']);
+                currentRow.invalidate();
+                registryOfficesTable.draw(false);
                 $('#registry-modal').modal('hide');
             }
         }
@@ -123,9 +125,7 @@ function sendMail(data){
         type: "POST",
         url: "/send_mail",
         data: data,
-        dataType: "text",
         success: function(data){
-            console.log(data);
             if(data['result'] === "success"){
                 $('#mail-modal').modal('hide');
             }
