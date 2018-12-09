@@ -12,9 +12,15 @@ use Zend\InputFilter\InputFilter;
 class RegistryForm extends Form
 {
     /**
+     * Indica se um form de edição
+     * @var bool
+     */
+    private $editForm = false;
+
+    /**
      * Inicializa o form
      */
-    public function __construct()
+    public function __construct($editForm = false)
     {
         parent::__construct("registry-form");
 
@@ -185,7 +191,7 @@ class RegistryForm extends Form
             ]
         ]);
 
-        // Adiciona o campo Nome
+        // Adiciona o campo ativo
         $this->add([
             "type" => "checkbox",
             "name" => "active",
@@ -195,6 +201,18 @@ class RegistryForm extends Form
             "options" => [
                 "label" => "Ativo",
                 "checked_value" => "1"
+            ]
+        ]);
+
+        // Adiciona o campo Nome
+        $this->add([
+            "type" => "text",
+            "name" => "registry-id",
+            "attributes" => [
+                "id" => "registry-id"
+            ],
+            "options" => [
+                "label" => "ID",
             ]
         ]);
     }
@@ -360,10 +378,9 @@ class RegistryForm extends Form
             ]
         ]);
 
-
         // Campo estado (uf)
         $inputFilter->add([
-            "name" => "name",
+            "name" => "state",
             "required" => true,
             "filters" => [
                 ['name' => 'StringTrim'],
@@ -415,7 +432,7 @@ class RegistryForm extends Form
                     'name' => 'StringLength',
                     'options' => [
                         'min' => 1,
-                        'max' => 10
+                        'max' => 20
                     ],
                 ]
             ]
@@ -439,6 +456,39 @@ class RegistryForm extends Form
                     ],
                 ]
             ]
+        ]);
+
+        // Campo nome do tabelião
+        $inputFilter->add([
+            "name" => "active",
+            "required" => true,
+            "filters" => [
+                [
+                    'name' => 'Boolean',
+                    "options" => [
+                        "type" => "integer"
+                    ]
+                ],
+            ],
+            "validators" => [
+            ]
+        ]);
+
+        $idValidators = $this->editForm ? [
+            [
+                "name" => "Digits"
+            ]
+        ] : [];
+        // Campo ID
+        $inputFilter->add([
+            "name" => "registry-id",
+            "required" => $this->editForm,
+            "filters" => [
+                [
+                    'name' => 'Int'
+                ],
+            ],
+            "validators" => $idValidators
         ]);
     }
 }

@@ -27,33 +27,44 @@ class RegistryController extends AbstractActionController{
         if($request->isPost()){ // Verifica que o método é POST antes de executar as ações necessárias
 
             // Obtém os dados do form
-            $data = array_merge_recursive(
-                $request->getPost()->toArray(),
-                $request->getFiles()->toArray()
-            );
-
+            $data = $request->getFiles()->toArray();
             $form->setData($data);
 
-            if($form->isValid()){ // Valida o form
+            // Valida o form
+            if($form->isValid()){
                 $data = $form->getData();
 
                 /** @var $excelReader XmlReader */
                 $xmlReader = $this->getServiceLocator()->get(XmlReader::class);
+                /** @var $registryManager  RegistryManager */
+                $registryManager = $this->getServiceLocator()->get(RegistryManager::class);
 
+                // Lê o XML
                 $result = $xmlReader->readXml($data['file']['tmp_name']);
 
+                // Se a leitura foi feita com sucesso, cria todos os cartórios que estão no XML
+                if($result != null){
+                    $result = $registryManager->importRegistryOfficesFromXml($result);
+                }
+                else{ // Se a leitura falhou, envia um Json indicando a falha
+                    return new JsonModel([
+                        "result" => "failure"
+                    ]);
+                }
+
+                // Verifica se todos os registro foram criados com sucesso
                 if($result === true){
                     return new JsonModel([
                         "result" => "success"
                     ]);
                 }
-                else{
+                else{ // Se a criação de algum registro falhou, envia um Json indicando a falha
                     return new JsonModel([
                         "result" => "failure"
                     ]);
                 }
             }
-            else{
+            else{ // Se o form é inválido, envia código HTTP 404
                 $this->getResponse()->setStatusCode(404);
             }
         }
@@ -67,7 +78,7 @@ class RegistryController extends AbstractActionController{
      * @return JsonModel
      */
     public function saveRegistryAction(){
-        $form = new RegistryForm();
+        $form = new RegistryForm(true);
         $request = $this->getRequest();
 
         if($request->isPost()){ // Verifica que o método é POST antes de executar as ações necessárias
@@ -122,6 +133,20 @@ class RegistryController extends AbstractActionController{
 
             if($form->isValid()){ // Valida o form
                 $data = $form->getData();
+
+                /** @var $entityManager EntityManager */
+                $entityManager = $this->getServiceLocator()->get(EntityManager::class);
+
+                // Verifica se já existe um cartório com o mesmo documento
+                $document = $data['document'];
+                $registryOffice = $entityManager->getRepository(Registry::class)->findOneBy(array('document' => $document));
+
+                if($registryOffice != null){
+                    $this->getResponse()->setStatusCode(404);
+                    return new JsonModel([
+                        "result" => "failure"
+                    ]);
+                }
 
                 /** @var $registryManager RegistryManager */
                 $registryManager = $this->getServiceLocator()->get(RegistryManager::class);

@@ -86,6 +86,7 @@ function createNewRegistry(data){
         success: function(data){
             if(data['result'] === "success"){
                 updateTable();
+                $('#registry-modal').modal('hide');
             }
         }
     });
@@ -100,6 +101,7 @@ function saveCurrentRegistry(data){
         success: function(data){
             if(data['result'] === "success"){
                 updateTable();
+                $('#registry-modal').modal('hide');
             }
         }
     });

@@ -13,8 +13,6 @@ use Doctrine\ORM\EntityManager;
 class XmlReaderFactory implements FactoryInterface{
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var $entityManager EntityManager */
-        $entityManager = $serviceLocator->get(EntityManager::class);
-        return new XmlReader($entityManager);
+        return new XmlReader();
     }
 }
