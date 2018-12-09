@@ -4,6 +4,7 @@ A solução proposta para o desafio é deixar de utilizar as planilhas, e fazer 
 # Instalação
 - Foram utilizados no sistema: Composer, Zend Framework e Doctrine ORM. 
 - Para instalar basta clonar o repositório, extrair em uma pasta do servidor desejado, executar o comando "php composer.phar install", e direcionar o tráfego para a pasta "public".
+- Foi incluído um arquivo registry.sql com a estrutura da tabela utilizada para guardar os cartórios.
 
 # Informações
 - Os dados dos cartórios serão guardados em um banco de dados, na tabela "registry".
