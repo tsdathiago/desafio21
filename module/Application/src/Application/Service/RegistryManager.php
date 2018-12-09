@@ -65,7 +65,32 @@ class RegistryManager
      */
     public function saveRegistry($data)
     {
+        $repository = $this->entityManager->getRepository(Registry::class);
+        /** @var $registryOffice Registry */
+        $registryOffice = $repository->findOneBy(["id" => $data["registry-id"]]);
 
+        $registryOffice->setName($data['name']);
+        $registryOffice->setRightName($data['right']);
+        $registryOffice->setDocument($data['document']);
+        $registryOffice->setDocumentType($data['document-type']);
+        $registryOffice->setZipcode($data['zipcode']);
+        $registryOffice->setAddress($data['address']);
+        $registryOffice->setDistrict($data['district']);
+        $registryOffice->setCity($data['city']);
+        $registryOffice->setState($data['state']);
+        $registryOffice->setPhone($data['phone']);
+        $registryOffice->setMail($data['mail']);
+        $registryOffice->setNotary($data['notary']);
+        $registryOffice->setActive($data['active']);
+
+        try{
+            $this->entityManager->flush();
+        }
+        catch(\Exception $exception){
+            return null;
+        }
+
+        return $registryOffice;
     }
 
     /**
@@ -95,7 +120,7 @@ class RegistryManager
             $mail = isset($registry['email']) ? $registry['email'] : "";
 
             // Tenta encontrar uma entidade existente, olhando o documento
-            $entity = $repository->findOneBy(array('document' => $document));
+            $entity = $repository->findOneBy(['document' => $document]);
             $foundEntity = true;
             if($entity == null){
                 $entity = new Registry();

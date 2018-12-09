@@ -1,6 +1,7 @@
 let registryOfficesTable = null;
 let registryEditMode = 0;
 let currentRegistry = -1;
+let currentRow = null;
 
 function updateTable(){
     if(registryOfficesTable == null){
@@ -33,23 +34,34 @@ function updateTable(){
                     "sSortDescending": ": Ordenar colunas de forma descendente"
                 }
             },
+            "columns": [
+                { "data": "id" },
+                { "data": "name" },
+                { "data": "phone" },
+                { "data": "mail" },
+                { "data": "right" },
+                { "data": "document" },
+                { "data": "zipcode" },
+                { "data": "address" },
+                { "data": "district" },
+                { "data": "city" },
+                { "data": "state" },
+                { "data": "notary" }
+            ],
+            responsive: {
+                details: false
+            },
             "columnDefs": [{
-                targets: 1,
+                targets: [1,4],
                 render: function ( data, type, row ) {
-                    if(type=="display"){
-                        if($(window).width() < 600){
-                            if(data.length > 20){
-                                return data.substr( 0, 20 ) +'…';
-                            }
-                            else{
-                                return data;
-                            }
+                    if(type === "display"){
+                        if($(window).width() < 500){
+                            return data.length > 20 ? data.substr( 0, 20 ) +'…' : data;
                         }
-                        return data.substr( 0, 60 ) +'…';
+                        return data.length > 40 ? data.substr( 0, 40 ) +'…' : data;
                     }
-                    else{
+                    else
                         return data;
-                    }
                 }
             }],
             "deferRender": true
@@ -68,7 +80,6 @@ function importXml(file, element){
         "type": "POST",
         "processData": false,
         "contentType" : false,
-        "dataType": 'text',
         "data": data,
         "success": function(data){
             if(data['result'] === "success"){
@@ -93,7 +104,7 @@ function createNewRegistry(data){
 }
 
 function saveCurrentRegistry(data){
-    data += "&id=" + currentRegistry;
+    data += "&registry-id=" + currentRegistry;
     $.ajax({
         type: "POST",
         url: "/save_registry_office",
@@ -109,6 +120,40 @@ function saveCurrentRegistry(data){
 
 function openAddRegistryModal(){
     $('#modal-label').html("Adicionar Cartório");
+    $('#name').val("");
+    $('#right').val("");
+    $('#document').val("");
+    $('#zipcode').val("");
+    $('#address').val("");
+    $('#district').val("");
+    $('#city').val("");
+    $('#state').val("");
+    $('#phone').val("");
+    $('#mail').val("");
+    $('#notary').val("");
+    $('#document-type').val("1");
+    $('#active').attr('checked', false);
+    registryEditMode = 0;
+    $('#registry-modal').modal();
+}
+
+function editRegistryModal(data){
+    $('#modal-label').html("Editar Cartório");
+    $('#name').val(data["name"]);
+    $('#right').val(data["right"]);
+    $('#document').val(data["document"]);
+    $('#zipcode').val(data["zipcode"]);
+    $('#address').val(data["address"]);
+    $('#district').val(data["district"]);
+    $('#city').val(data["city"]);
+    $('#state').val(data["state"]);
+    $('#phone').val(data["phone"]);
+    $('#mail').val(data["mail"]);
+    $('#notary').val(data["notary"]);
+    $('#document-type').val(data["document-type"]);
+    $('#active').attr('checked', data["active"] === "1");
+    currentRegistry = data["id"];
+    registryEditMode = 1;
     $('#registry-modal').modal();
 }
 
@@ -127,5 +172,14 @@ $(document).ready(function() {
         if(registryEditMode === 0) createNewRegistry(data);
         else saveCurrentRegistry(data);
         return false;
+    });
+    $('#data-table tbody').on('click', 'tr', function () {
+        if(registryOfficesTable != null){
+            let row = registryOfficesTable.row($(this));
+            if(row != null) {
+                editRegistryModal(row.data());
+                currentRow = row;
+            }
+        }
     });
 });

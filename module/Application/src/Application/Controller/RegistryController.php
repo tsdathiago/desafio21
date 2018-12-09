@@ -90,23 +90,36 @@ class RegistryController extends AbstractActionController{
             if($form->isValid()){ // Valida o form
                 $data = $form->getData();
 
+                /** @var $entityManager EntityManager */
+                $entityManager = $this->getServiceLocator()->get(EntityManager::class);
+
                 /** @var $registryManager RegistryManager */
                 $registryManager = $this->getServiceLocator()->get(RegistryManager::class);
+                try{
+                    $result = $entityManager->getRepository(Registry::class)->findOneBy(["id" => $data["registry-id"]]);
+                }
+                catch(\Exception $exception){
+                    echo $exception;
+                    exit;
+                }
 
-                $registryOffice = $registryManager->saveRegistry($data);
 
-                $json = array(
-                    "data" => [
-                        $registryOffice->getId(),
-                        $registryOffice->getName(),
-                        $registryOffice->getPhone(),
-                        $registryOffice->getMail()
-                    ]
-                );
-                $json['result'] = "success";
+                if($result != null){
+                    $registryOffice = $registryManager->saveRegistry($data);
 
-                // Retorna o Json para o cliente
-                return new JsonModel($json);
+                    $json = array(
+                        "data" => $registryOffice->asArray()
+                    );
+                    $json['result'] = "success";
+
+                    // Retorna o Json para o cliente
+                    return new JsonModel($json);
+                }
+                else{
+                    return new JsonModel([
+                        "result" => "failure"
+                    ]);
+                }
             }
             else{
                 $this->getResponse()->setStatusCode(404);
@@ -154,12 +167,7 @@ class RegistryController extends AbstractActionController{
                 $registryOffice = $registryManager->createRegistry($data);
 
                 $json = array(
-                    "data" => [
-                        $registryOffice->getId(),
-                        $registryOffice->getName(),
-                        $registryOffice->getPhone(),
-                        $registryOffice->getMail()
-                    ]
+                    "data" => $registryOffice->asArray()
                 );
                 $json['result'] = "success";
 
@@ -197,12 +205,7 @@ class RegistryController extends AbstractActionController{
                 "data" => []
             );
             foreach($registryOffices as $registryOffice){
-                $json['data'][] = [
-                    $registryOffice->getId(),
-                    $registryOffice->getName(),
-                    $registryOffice->getPhone(),
-                    $registryOffice->getMail()
-                ];
+                $json['data'][] = $registryOffice->asArray();
             }
             $json['result'] = "success";
 

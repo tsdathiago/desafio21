@@ -421,7 +421,7 @@ class RegistryForm extends Form
         // Campo telefone
         $inputFilter->add([
             "name" => "phone",
-            "required" => true,
+            "required" => false,
             "filters" => [
                 ['name' => 'StringTrim'],
                 ['name' => 'StripTags'],

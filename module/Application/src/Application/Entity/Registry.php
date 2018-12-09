@@ -14,11 +14,11 @@ class Registry{
     /**
      * Contante que representa que o tipo do documento é CPF.
      */
-    const DOCUMENT_TYPE_CPF = 1;
+    const DOCUMENT_TYPE_CPF = "1";
     /**
      * Contante que representa que o tipo do documento é CNPJ.
      */
-    const DOCUMENT_TYPE_CNPJ = 2;
+    const DOCUMENT_TYPE_CNPJ = "2";
 
     /**
      * @var $id string
@@ -107,7 +107,7 @@ class Registry{
     protected $active;
 
     /**
-     * @return int
+     * @return string
      */
     public function getId()
     {
@@ -115,7 +115,7 @@ class Registry{
     }
 
     /**
-     * @param int $id
+     * @param string $id
      */
     public function setId($id)
     {
@@ -176,7 +176,7 @@ class Registry{
      * 1 - CPF
      * 2 - CNPJ
      *
-     * @return int
+     * @return string
      */
     public function getDocumentType()
     {
@@ -189,7 +189,7 @@ class Registry{
      * 1 - CPF
      * 2 - CNPJ
      *
-     * @param int $documentType
+     * @param string $documentType
      */
     public function setDocumentType($documentType)
     {
@@ -339,5 +339,29 @@ class Registry{
     public function setActive($active)
     {
         $this->active = $active;
+    }
+
+    /**
+     * Retorna uma array com os dados do cartório
+     *
+     * @return array
+     */
+    public function asArray(){
+        return array(
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "right" => $this->getRightName(),
+            "document" => $this->getDocument(),
+            "zipcode" => $this->getZipcode(),
+            "address" => $this->getAddress(),
+            "district" => $this->getDistrict(),
+            "city" => $this->getCity(),
+            "state" => $this->getState(),
+            "phone" => $this->getPhone(),
+            "mail" => $this->getMail(),
+            "notary" => $this->getNotary(),
+            "active" => $this->getActive(),
+            "document-type" => $this->getDocumentType()
+        );
     }
 }
