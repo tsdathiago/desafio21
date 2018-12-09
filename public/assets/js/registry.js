@@ -2,6 +2,7 @@ let registryOfficesTable = null; // Tabela DataTable contendo os registros dos c
 let registryEditMode = 0; // Modo de edição: 0 - Novo Cartório, 1 - Cartório Existente
 let currentRegistry = -1; // Cartório atualmente exibido na modal
 let currentRow = null; // Linha sendo atualmente editada na modal
+$.fn.dataTable.ext.errMode = 'throw';
 
 // Atualiza a tabela de cartórios inteira
 function updateTable(){
@@ -106,8 +107,11 @@ function importXml(file, element){
                 updateTable();
             }
             else{
-                toastr.error(data["error_message"]);
+                toastr.error(data["error-message"]);
             }
+        },
+        error: function(){
+            toastr.error("Não foi possível executar sua requisição");
         }
     });
 }
@@ -129,8 +133,11 @@ function createNewRegistry(data){
                 $('#registry-modal').modal('hide');
             }
             else{
-                toastr.error(data["error_message"]);
+                toastr.error(data["error-message"]);
             }
+        },
+        error: function(){
+            toastr.error("Não foi possível executar sua requisição");
         }
     });
 }
@@ -156,8 +163,11 @@ function saveCurrentRegistry(data){
                 $('#registry-modal').modal('hide');
             }
             else{
-                toastr.error(data["error_message"]);
+                toastr.error(data["error-message"]);
             }
+        },
+        error: function(){
+            toastr.error("Não foi possível executar sua requisição");
         }
     });
 }
@@ -174,8 +184,11 @@ function sendMail(data){
                 $('#mail-modal').modal('hide');
             }
             else{
-                toastr.error(data["error_message"]);
+                toastr.error(data["error-message"]);
             }
+        },
+        error: function(){
+            toastr.error("Não foi possível executar sua requisição");
         }
     });
 }

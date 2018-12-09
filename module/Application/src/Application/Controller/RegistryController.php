@@ -50,7 +50,8 @@ class RegistryController extends AbstractActionController{
                 }
                 else{ // Se a leitura falhou, envia um Json indicando a falha
                     return new JsonModel([
-                        "result" => "failure"
+                        "result" => "failure",
+                        "error-message" => "A leitura do XML falhou."
                     ]);
                 }
 
@@ -62,12 +63,18 @@ class RegistryController extends AbstractActionController{
                 }
                 else{ // Se a criação de algum registro falhou, envia um Json indicando a falha
                     return new JsonModel([
-                        "result" => "failure"
+                        "result" => "failure",
+                        "error-message" => "O processo de importação falhou. Alguns registros podem ter sido importados com sucesso."
                     ]);
                 }
             }
             else{ // Se o form é inválido, envia código HTTP 404
-                $this->getResponse()->setStatusCode(404);
+                $message = $form->get(array_keys($form->getMessages())[0])->getLabel(). ": " .
+                    array_values(array_values($form->getMessages())[0])[0];
+                return new JsonModel([
+                    "result" => "failure",
+                    "error-message" => $message
+                ]);
             }
         }
         else{ // Caso a requisição seja GET, envia o código HTTP 404
@@ -104,7 +111,12 @@ class RegistryController extends AbstractActionController{
                 ]);
             }
             else{
-                $this->getResponse()->setStatusCode(404);
+                $message = $form->get(array_keys($form->getMessages())[0])->getLabel(). ": " .
+                    array_values(array_values($form->getMessages())[0])[0];
+                return new JsonModel([
+                    "result" => "failure",
+                    "error-message" => $message
+                ]);
             }
         }
         else{ // Caso a requisição seja GET, envia o código HTTP 404
@@ -134,14 +146,7 @@ class RegistryController extends AbstractActionController{
 
                 /** @var $registryManager RegistryManager */
                 $registryManager = $this->getServiceLocator()->get(RegistryManager::class);
-                try{
-                    $result = $entityManager->getRepository(Registry::class)->findOneBy(["id" => $data["registry-id"]]);
-                }
-                catch(\Exception $exception){
-                    echo $exception;
-                    exit;
-                }
-
+                $result = $entityManager->getRepository(Registry::class)->findOneBy(["id" => $data["registry-id"]]);
 
                 if($result != null){
                     $registryOffice = $registryManager->saveRegistry($data);
@@ -156,12 +161,18 @@ class RegistryController extends AbstractActionController{
                 }
                 else{
                     return new JsonModel([
-                        "result" => "failure"
+                        "result" => "failure",
+                        "error-message" => "O registro especificado não existe"
                     ]);
                 }
             }
             else{
-                $this->getResponse()->setStatusCode(404);
+                $message = $form->get(array_keys($form->getMessages())[0])->getLabel(). ": " .
+                    array_values(array_values($form->getMessages())[0])[0];
+                return new JsonModel([
+                    "result" => "failure",
+                    "error-message" => $message
+                ]);
             }
         }
         else{ // Caso a requisição seja GET, envia o código HTTP 404
@@ -196,7 +207,8 @@ class RegistryController extends AbstractActionController{
                 if($registryOffice != null){
                     $this->getResponse()->setStatusCode(404);
                     return new JsonModel([
-                        "result" => "failure"
+                        "result" => "failure",
+                        "error-message" => "Um registro com o documento especificado já existe"
                     ]);
                 }
 
@@ -214,7 +226,12 @@ class RegistryController extends AbstractActionController{
                 return new JsonModel($json);
             }
             else{
-                $this->getResponse()->setStatusCode(404);
+                $message = $form->get(array_keys($form->getMessages())[0])->getLabel(). ": " .
+                    array_values(array_values($form->getMessages())[0])[0];
+                return new JsonModel([
+                    "result" => "failure",
+                    "error-message" => $message
+                ]);
             }
         }
         else{ // Caso a requisição seja GET, envia o código HTTP 404
@@ -247,7 +264,6 @@ class RegistryController extends AbstractActionController{
                 $json['data'][] = $registryOffice->asArray();
             }
             $json['result'] = "success";
-
 
             // Retorna o Json para o cliente
             return new JsonModel($json);
