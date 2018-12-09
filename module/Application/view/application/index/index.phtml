@@ -1,16 +1,169 @@
 <?php
 echo $this->headTitle('P21 Sistemas');
 $this->inlineScript()->appendFile('/assets/js/registry.js', 'text/javascript');
+
 /** @var $form \Application\Form\ImportXmlForm */
 $form = $this->form;
+/** @var $registryForm \Application\Form\RegistryForm */
+$registryForm = $this->registryForm;
+$registryForm->prepare();
+
+$registryForm->get('name')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite o nome'
+]);
+$registryForm->get('right')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite a razão social'
+]);
+$registryForm->get('document')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite o documento'
+]);
+$registryForm->get('document-type')->setAttributes([
+    'class'=>'form-control'
+]);
+$registryForm->get('zipcode')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite o CEP'
+]);
+$registryForm->get('address')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite o endereço'
+]);
+$registryForm->get('district')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite o bairro'
+]);
+$registryForm->get('city')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite a cidade'
+]);
+$registryForm->get('state')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite a sigla do estado'
+]);
+$registryForm->get('phone')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite o telefone'
+]);
+$registryForm->get('mail')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite o e-mail'
+]);
+$registryForm->get('notary')->setAttributes([
+    'class'=>'form-control',
+    'placeholder'=>'Digite o nome do tabelião'
+]);
 ?>
 
-<section class="jumbotron text-center">
+<div class="modal fade" id="registry-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="registry-form" method="post">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-label"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-check">
+                            <?= $this->formElement($registryForm->get('active')); ?>
+                            <?= $this->formLabel($registryForm->get('active')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('name')); ?>
+                            <?= $this->formElement($registryForm->get('name')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('right')); ?>
+                            <?= $this->formElement($registryForm->get('right')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('document')); ?>
+                            <?= $this->formElement($registryForm->get('document')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('document-type')); ?>
+                            <?= $this->formElement($registryForm->get('document-type')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('zipcode')); ?>
+                            <?= $this->formElement($registryForm->get('zipcode')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('address')); ?>
+                            <?= $this->formElement($registryForm->get('address')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('district')); ?>
+                            <?= $this->formElement($registryForm->get('district')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('city')); ?>
+                            <?= $this->formElement($registryForm->get('city')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('state')); ?>
+                            <?= $this->formElement($registryForm->get('state')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('phone')); ?>
+                            <?= $this->formElement($registryForm->get('phone')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('mail')); ?>
+                            <?= $this->formElement($registryForm->get('mail')); ?>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <?= $this->formLabel($registryForm->get('notary')); ?>
+                            <?= $this->formElement($registryForm->get('notary')); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button class="btn btn-primary" type="submit">Salvar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 
+<section class="jumbotron text-center">
     <div class="container buttons-top">
         <label class="btn btn-primary btn-file" id="import-file-label" for="file">
             Importar XML <?= $this->formElement($form->get('file')); ?>
         </label>
+        <button type="button" class="btn btn-primary" id="add-registry-button">Adicionar Cartório</button>
     </div>
     <div class="container">
         <div id="table-container">

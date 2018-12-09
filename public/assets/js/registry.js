@@ -78,11 +78,19 @@ function importXml(file, element){
     });
 }
 
+function openAddRegistryModal(){
+    $('#modal-label').html("Adicionar Cartório");
+    $('#registry-modal').modal();
+}
+
 $(document).ready(function() {
     updateTable();
     $(document).on('change', '#file', function() {
         let input = $(this);
         let qtd = input.get(0).files ? input.get(0).files.length : 0;
         if(qtd === 1) importXml(input.get(0).files[0], input);
+    });
+    $("#add-registry-button").click(function(){
+        openAddRegistryModal();
     });
 });

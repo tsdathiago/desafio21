@@ -27,6 +27,14 @@
     margin-top: 10px;
 }
 
+#import-file-label, #add-registry-button{
+    vertical-align: initial;
+}
+
+.form-check{
+    padding-left: 0;
+}
+
 .form-control-file, .form-control-range{
     display: inline-block;
     width: auto;

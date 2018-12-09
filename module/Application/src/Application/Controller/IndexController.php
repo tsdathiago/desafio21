@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Form\ImportXmlForm;
+use Application\Form\RegistryForm;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -16,7 +17,8 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         return new ViewModel([
-            "form" => new ImportXmlForm()
+            "form" => new ImportXmlForm(),
+            "registryForm" => new RegistryForm()
         ]);
     }
 }

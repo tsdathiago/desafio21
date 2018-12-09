@@ -61,6 +61,14 @@ class RegistryController extends AbstractActionController{
     }
 
     /**
+     * Cria o cartório especificado pelo usuário
+     * @return JsonModel
+     */
+    public function createRegistryAction(){
+        return new JsonModel();
+    }
+
+    /**
      * Retorna ao usuário um Json contendo todos os cartórios registrados
      * @return JsonModel
      */
