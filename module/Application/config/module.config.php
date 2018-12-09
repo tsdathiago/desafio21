@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'mail_sender' => "porygontsda@gmail.com",
     'router'          => [
         'routes' => [
             'home'        => [
@@ -53,6 +54,16 @@ return [
                     ],
                 ]
             ],
+            'send_mail'        => [
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/send_mail',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Registry',
+                        'action'     => 'sendMail',
+                    ],
+                ]
+            ],
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
@@ -87,7 +98,8 @@ return [
     'service_manager' => [
         'factories' => [
             \Application\Service\XmlReader::class => \Application\Factory\XmlReaderFactory::class,
-            \Application\Service\RegistryManager::class => \Application\Factory\RegistryManagerFactory::class
+            \Application\Service\RegistryManager::class => \Application\Factory\RegistryManagerFactory::class,
+            \Application\Service\MailSender::class => \Application\Factory\MailSenderFactory::class
         ],
         'aliases'   => [
             'translator' => 'MvcTranslator',

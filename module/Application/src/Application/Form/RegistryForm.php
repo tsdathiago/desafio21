@@ -19,6 +19,7 @@ class RegistryForm extends Form
 
     /**
      * Inicializa o form
+     * @param bool $editForm
      */
     public function __construct($editForm = false)
     {

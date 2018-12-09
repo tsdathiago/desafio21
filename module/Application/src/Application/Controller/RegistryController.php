@@ -2,8 +2,10 @@
 namespace Application\Controller;
 
 use Application\Entity\Registry;
+use Application\Form\EmailForm;
 use Application\Form\ImportXmlForm;
 use Application\Form\RegistryForm;
+use Application\Service\MailSender;
 use Application\Service\RegistryManager;
 use Application\Service\XmlReader;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -65,6 +67,43 @@ class RegistryController extends AbstractActionController{
                 }
             }
             else{ // Se o form é inválido, envia código HTTP 404
+                $this->getResponse()->setStatusCode(404);
+            }
+        }
+        else{ // Caso a requisição seja GET, envia o código HTTP 404
+            $this->getResponse()->setStatusCode(404);
+        }
+    }
+
+    /**
+     * Envia o e-mail especificado pelo usuário para todos os associados ativos
+     *
+     * @return JsonModel
+     */
+    public function sendMailAction(){
+        $form = new EmailForm();
+        $request = $this->getRequest();
+
+        if($request->isPost()){ // Verifica que o método é POST antes de executar as ações necessárias
+            // Obtém os dados do form
+            $data = $request->getPost()->toArray();
+
+            $form->setData($data);
+
+            if($form->isValid()) { // Valida o form
+                $data = $form->getData();
+
+                /** @var $registryManager MailSender */
+                $mailSender = $this->getServiceLocator()->get(MailSender::class);
+
+                $config = $this->getServiceLocator()->get('config');
+                $mailSender->sendMail($config["mail_sender"], $data["subject"], $data["mail-body"]);
+
+                return new JsonModel([
+                    "result" => "success"
+                ]);
+            }
+            else{
                 $this->getResponse()->setStatusCode(404);
             }
         }

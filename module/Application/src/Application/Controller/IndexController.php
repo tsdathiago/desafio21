@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Form\EmailForm;
 use Application\Form\ImportXmlForm;
 use Application\Form\RegistryForm;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -18,7 +19,8 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel([
             "form" => new ImportXmlForm(),
-            "registryForm" => new RegistryForm()
+            "registryForm" => new RegistryForm(),
+            "emailForm" => new EmailForm()
         ]);
     }
 }

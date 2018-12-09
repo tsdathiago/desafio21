@@ -118,6 +118,27 @@ function saveCurrentRegistry(data){
     });
 }
 
+function sendMail(data){
+    $.ajax({
+        type: "POST",
+        url: "/send_mail",
+        data: data,
+        dataType: "text",
+        success: function(data){
+            console.log(data);
+            if(data['result'] === "success"){
+                $('#mail-modal').modal('hide');
+            }
+        }
+    });
+}
+
+function openSendMailModal(){
+    $('#subject').val("");
+    $('#mail-body').val("");
+    $('#mail-modal').modal();
+}
+
 function openAddRegistryModal(){
     $('#modal-label').html("Adicionar Cartório");
     $('#name').val("");
@@ -167,10 +188,18 @@ $(document).ready(function() {
     $("#add-registry-button").click(function(){
         openAddRegistryModal();
     });
+    $("#send-mail-button").click(function(){
+        openSendMailModal();
+    });
     $('#registry-form').submit(function(){
         let data = $(this).serialize();
         if(registryEditMode === 0) createNewRegistry(data);
         else saveCurrentRegistry(data);
+        return false;
+    });
+    $('#mail-form').submit(function(){
+        let data = $(this).serialize();
+        sendMail(data);
         return false;
     });
     $('#data-table tbody').on('click', 'tr', function () {

@@ -27,7 +27,7 @@
     margin-top: 10px;
 }
 
-#import-file-label, #add-registry-button{
+#import-file-label, #add-registry-button, #send-mail-button{
     vertical-align: initial;
 }
 
@@ -60,7 +60,7 @@
 }
 
 footer {
-    padding-top: 3rem;
+    padding-top: 0;
     padding-bottom: 3rem;
 }
 
