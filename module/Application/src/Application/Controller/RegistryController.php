@@ -3,6 +3,8 @@ namespace Application\Controller;
 
 use Application\Entity\Registry;
 use Application\Form\ImportXmlForm;
+use Application\Form\RegistryForm;
+use Application\Service\RegistryManager;
 use Application\Service\XmlReader;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel;
@@ -61,11 +63,91 @@ class RegistryController extends AbstractActionController{
     }
 
     /**
+     * Salva o cartório especificado pelo usuário
+     * @return JsonModel
+     */
+    public function saveRegistryAction(){
+        $form = new RegistryForm();
+        $request = $this->getRequest();
+
+        if($request->isPost()){ // Verifica que o método é POST antes de executar as ações necessárias
+            // Obtém os dados do form
+            $data = $request->getPost()->toArray();
+
+            $form->setData($data);
+
+            if($form->isValid()){ // Valida o form
+                $data = $form->getData();
+
+                /** @var $registryManager RegistryManager */
+                $registryManager = $this->getServiceLocator()->get(RegistryManager::class);
+
+                $registryOffice = $registryManager->saveRegistry($data);
+
+                $json = array(
+                    "data" => [
+                        $registryOffice->getId(),
+                        $registryOffice->getName(),
+                        $registryOffice->getPhone(),
+                        $registryOffice->getMail()
+                    ]
+                );
+                $json['result'] = "success";
+
+                // Retorna o Json para o cliente
+                return new JsonModel($json);
+            }
+            else{
+                $this->getResponse()->setStatusCode(404);
+            }
+        }
+        else{ // Caso a requisição seja GET, envia o código HTTP 404
+            $this->getResponse()->setStatusCode(404);
+        }
+    }
+
+    /**
      * Cria o cartório especificado pelo usuário
      * @return JsonModel
      */
     public function createRegistryAction(){
-        return new JsonModel();
+        $form = new RegistryForm();
+        $request = $this->getRequest();
+
+        if($request->isPost()){ // Verifica que o método é POST antes de executar as ações necessárias
+            // Obtém os dados do form
+            $data = $request->getPost()->toArray();
+
+            $form->setData($data);
+
+            if($form->isValid()){ // Valida o form
+                $data = $form->getData();
+
+                /** @var $registryManager RegistryManager */
+                $registryManager = $this->getServiceLocator()->get(RegistryManager::class);
+
+                $registryOffice = $registryManager->createRegistry($data);
+
+                $json = array(
+                    "data" => [
+                        $registryOffice->getId(),
+                        $registryOffice->getName(),
+                        $registryOffice->getPhone(),
+                        $registryOffice->getMail()
+                    ]
+                );
+                $json['result'] = "success";
+
+                // Retorna o Json para o cliente
+                return new JsonModel($json);
+            }
+            else{
+                $this->getResponse()->setStatusCode(404);
+            }
+        }
+        else{ // Caso a requisição seja GET, envia o código HTTP 404
+            $this->getResponse()->setStatusCode(404);
+        }
     }
 
     /**
@@ -74,7 +156,6 @@ class RegistryController extends AbstractActionController{
      */
     public function getAllRegistryOfficesAction()
     {
-
         /** @var $entityManager EntityManager */
         $entityManager = $this->getServiceLocator()->get(EntityManager::class);
 

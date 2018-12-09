@@ -62,8 +62,8 @@ class XmlReader
             $state = $registry['uf'];
             $active = $registry['ativo'] == "1" ? "1" : "0";
             $notary = $registry['tabeliao'];
-            $phone = $registry['telefone'];
-            $mail = $registry['email'];
+            $phone = isset($registry['telefone']) ? $registry['telefone'] : "";
+            $mail = isset($registry['email']) ? $registry['email'] : "";
 
             // Tenta encontrar uma entidade existente, olhando o documento
             $entity = $repository->findOneBy(array('document' => $document));

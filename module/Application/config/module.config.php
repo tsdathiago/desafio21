@@ -33,6 +33,26 @@ return [
                     ],
                 ]
             ],
+            'create_new_registry_office'        => [
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/create_new_registry_office',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Registry',
+                        'action'     => 'createRegistry',
+                    ],
+                ]
+            ],
+            'save_registry_office'        => [
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => [
+                    'route' => '/save_registry_office',
+                    'defaults' => [
+                        'controller' => 'Application\Controller\Registry',
+                        'action'     => 'saveRegistry',
+                    ],
+                ]
+            ],
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
@@ -66,11 +86,13 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            \Application\Service\XmlReader::class => \Application\Factory\XmlReaderFactory::class
+            \Application\Service\XmlReader::class => \Application\Factory\XmlReaderFactory::class,
+            \Application\Service\RegistryManager::class => \Application\Factory\RegistryManagerFactory::class
         ],
         'aliases'   => [
             'translator' => 'MvcTranslator',
-            'XmlReader' => \Application\Service\XmlReader::class
+            'XmlReader' => \Application\Service\XmlReader::class,
+            'RegistryManager' => \Application\Service\RegistryManager::class
         ],
     ],
     'translator'      => [

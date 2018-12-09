@@ -1,4 +1,6 @@
 let registryOfficesTable = null;
+let registryEditMode = 0;
+let currentRegistry = -1;
 
 function updateTable(){
     if(registryOfficesTable == null){
@@ -69,9 +71,34 @@ function importXml(file, element){
         "dataType": 'text',
         "data": data,
         "success": function(data){
-            console.log(data);
             if(data['result'] === "success"){
-                console.log("success");
+                updateTable();
+            }
+        }
+    });
+}
+
+function createNewRegistry(data){
+    $.ajax({
+        type: "POST",
+        url: "/create_new_registry_office",
+        data: data,
+        success: function(data){
+            if(data['result'] === "success"){
+                updateTable();
+            }
+        }
+    });
+}
+
+function saveCurrentRegistry(data){
+    data += "&id=" + currentRegistry;
+    $.ajax({
+        type: "POST",
+        url: "/save_registry_office",
+        data: data,
+        success: function(data){
+            if(data['result'] === "success"){
                 updateTable();
             }
         }
@@ -92,5 +119,11 @@ $(document).ready(function() {
     });
     $("#add-registry-button").click(function(){
         openAddRegistryModal();
+    });
+    $('#registry-form').submit(function(){
+        let data = $(this).serialize();
+        if(registryEditMode === 0) createNewRegistry(data);
+        else saveCurrentRegistry(data);
+        return false;
     });
 });
