@@ -63,7 +63,7 @@ function updateTable(){
 
             // Definições das colunas
             "columnDefs": [{
-                targets: [1,4], // A definição se aplica as colunas de índice 1 e 4
+                targets: [1,4,11], // A definição se aplica as colunas de índice 1 e 4
                 render: function ( data, type, row ) {
                     if(type === "display"){
                         // Se a largura da janela é menor que 500, adiciona reticências no nome
@@ -102,7 +102,11 @@ function importXml(file, element){
         "data": data,
         "success": function(data){
             if(data['result'] === "success"){
+                toastr.success("Dados importados com sucesso");
                 updateTable();
+            }
+            else{
+                toastr.error(data["error_message"]);
             }
         }
     });
@@ -117,8 +121,15 @@ function createNewRegistry(data){
         data: data,
         success: function(data){
             if(data['result'] === "success"){
-                updateTable();
+                // Atualizamos abaixo a tabela com os novos dados
+                registryOfficesTable.rows.add([data['data']]);
+                registryOfficesTable.draw(false);
+
+                toastr.success("Registro criado com sucesso");
                 $('#registry-modal').modal('hide');
+            }
+            else{
+                toastr.error(data["error_message"]);
             }
         }
     });
@@ -141,7 +152,11 @@ function saveCurrentRegistry(data){
                 currentRow.invalidate();
                 registryOfficesTable.draw(false);
 
+                toastr.success("Registro atualizado com sucesso");
                 $('#registry-modal').modal('hide');
+            }
+            else{
+                toastr.error(data["error_message"]);
             }
         }
     });
@@ -157,6 +172,9 @@ function sendMail(data){
         success: function(data){
             if(data['result'] === "success"){
                 $('#mail-modal').modal('hide');
+            }
+            else{
+                toastr.error(data["error_message"]);
             }
         }
     });
