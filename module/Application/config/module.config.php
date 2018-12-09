@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'mail_sender' => "porygontsda@gmail.com",
+    'mail_sender' => "seuemail@gmail.com",
     'router'          => [
         'routes' => [
             'home'        => [
